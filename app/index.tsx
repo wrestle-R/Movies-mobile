@@ -11,7 +11,7 @@ export default function Index() {
     >
       <Text className="text-2xl text-blue-500 font-bold">
           
-      Welcome</Text>
+      Welcome to Daniel</Text>
     </View>
   );
 }
