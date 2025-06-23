@@ -146,12 +146,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 40, // increased from 16 to bring navbar closer to center
     right: 40, // increased from 16 to bring navbar closer to center
-    bottom: 4,
+    // bottom: 4,
     backgroundColor: '#000000',
     borderTopWidth: 0,
     elevation: 0,
     height: 50,
-    marginBottom: 16,
+    marginBottom: 8,
     paddingBottom: 0,
     paddingTop: 5,
     paddingHorizontal: 5,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: PURPLE,
     borderRadius: 24,
     paddingHorizontal: 11,
-    paddingVertical: 6,
+    paddingVertical: 4,
     minWidth: 90,
     minHeight: 40,
   },

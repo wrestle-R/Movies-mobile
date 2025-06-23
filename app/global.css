@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #030014;
+  margin: 0;
+  padding: 0;
+}
