@@ -1,4 +1,4 @@
-import { theme } from '@/constants/theme';
+import { useAppTheme } from '@/contexts/theme-context';
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 
@@ -11,6 +11,7 @@ type Props = {
 };
 
 export default function AppButton({ label, onPress, disabled, loading, mode = 'primary' }: Props) {
+  const { theme } = useAppTheme();
   const isPrimary = mode === 'primary';
 
   return (
@@ -19,14 +20,16 @@ export default function AppButton({ label, onPress, disabled, loading, mode = 'p
       disabled={disabled || loading}
       style={[
         styles.button,
-        isPrimary ? styles.primary : styles.secondary,
+        { borderRadius: theme.radius.md, paddingHorizontal: theme.spacing.lg },
+        isPrimary ? { backgroundColor: theme.colors.accent } : styles.secondary,
+        !isPrimary ? { borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceAlt } : null,
         (disabled || loading) && styles.disabled,
       ]}
     >
       {loading ? (
         <ActivityIndicator color={isPrimary ? '#121212' : theme.colors.text} />
       ) : (
-        <Text style={[styles.label, isPrimary ? styles.primaryLabel : styles.secondaryLabel]}>{label}</Text>
+        <Text style={[styles.label, { color: isPrimary ? '#121212' : theme.colors.text }]}>{label}</Text>
       )}
     </Pressable>
   );
@@ -35,18 +38,11 @@ export default function AppButton({ label, onPress, disabled, loading, mode = 'p
 const styles = StyleSheet.create({
   button: {
     minHeight: 44,
-    borderRadius: theme.radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: theme.spacing.lg,
-  },
-  primary: {
-    backgroundColor: theme.colors.accent,
   },
   secondary: {
-    backgroundColor: theme.colors.surfaceAlt,
     borderWidth: 1,
-    borderColor: theme.colors.border,
   },
   disabled: {
     opacity: 0.6,
@@ -54,11 +50,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: '700',
-  },
-  primaryLabel: {
-    color: '#121212',
-  },
-  secondaryLabel: {
-    color: theme.colors.text,
   },
 });

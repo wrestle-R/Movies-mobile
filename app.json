@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/branding/icon.png",
     "scheme": "cinemans",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.cinemans.mobile"
@@ -31,7 +31,11 @@
           "image": "./assets/branding/splash.png",
           "imageWidth": 260,
           "resizeMode": "contain",
-          "backgroundColor": "#090B10"
+          "backgroundColor": "#F4F6FA",
+          "dark": {
+            "image": "./assets/branding/splash.png",
+            "backgroundColor": "#090B10"
+          }
         }
       ]
     ],
