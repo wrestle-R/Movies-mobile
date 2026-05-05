@@ -1,46 +1,30 @@
-# Cinemans Mobile
+# Movies Mobile
 
-Professional Expo movie app with Home, Search, Details, Saved watchlist, and Profile.
+A React Native + Expo movie app I built while learning React Native end-to-end.
 
-## Setup
+## Why I built this
 
-1. Install deps
+I built this project to practice:
+- Expo Router navigation
+- How basic react-native works 
+- Can be useful for buiding apps fast during hackathons
 
-```bash
-npm install
-```
+## Download APK
 
-2. Configure env
+If you just want to try the app, download the latest APK from GitHub Releases:
 
-```bash
-cp .env.example .env
-# then set EXPO_PUBLIC_MOVIE_API_KEY
-```
+- https://github.com/wrestle-R/Movies-mobile/releases
 
-3. Run app
+Tip: open the latest release and download the `.apk` asset.
 
-```bash
-npx expo start
-```
+## Screenshots
 
-## Quality checks
+### Light Mode
 
-```bash
-npx expo-doctor
-npm run lint
-npm run typecheck
-```
+![Light Mode](assets/readme/lightmode.jpeg)
 
-## Android preview APK (EAS)
+### Dark Mode
 
-```bash
-eas login
-eas build:configure
-eas build --profile preview --platform android
-```
+![Dark Mode](assets/readme/darkmode.jpeg)
 
-Or use:
 
-```bash
-npm run build:android:preview
-```
