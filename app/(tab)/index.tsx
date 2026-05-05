@@ -1,107 +1,93 @@
-import MovieCard from "@/components/MovieCard";
-import SearchBar from "@/components/SearchBar";
-import { icons } from "@/constants/icons";
-import { usePopularMovies } from "@/services/useFetch";
-import { router } from "expo-router";
-import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import MovieCard from '@/components/MovieCard';
+import SearchBar from '@/components/SearchBar';
+import SectionHeader from '@/components/ui/SectionHeader';
+import StateView from '@/components/ui/StateView';
+import { theme } from '@/constants/theme';
+import { usePopularMovies } from '@/services/useFetch';
+import brandIcon from '@/assets/branding/icon.png';
+import { router } from 'expo-router';
+import React from 'react';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 
-export default function Index() {
-  const { data: movies, loading: moviesLoading, error: moviesError, refetch } = usePopularMovies(1);
+export default function HomeScreen() {
+  const { data, loading, error, refetch } = usePopularMovies(1);
 
-  // Limit to first 30 movies - add safety check
-  const limitedMovies = movies?.results?.slice(0, 18) || [];
-
-  const renderHeader = () => (
-    <View className="items-center pt-12 pb-3 px-4 py-8">
-      <View className="flex-row items-center mb-5 mt-8">
-        <Image 
-          source={icons.movie_white}
-          className="w-12 h-12 mr-2"
-        />
-        <Text className="text-3xl font-bold text-white tracking-wide">
-          Cinemans
-        </Text>
-      </View>
-
-      <SearchBar 
-        onPress={() => router.push("/search")}
-        placeholder="Search for a Movie"
-      />
-      
-      <Text className="text-xl font-bold text-white mt-4 mb-2 self-start">
-        Latest Movies
-      </Text>
-    </View>
-  );
-
-  const renderMovieItem = ({ item }: { item: any }) => (
-    <MovieCard 
-      movie={item}
-      onPress={() => {
-        router.push(`/movie/${item.id}`);
-      }}
-    />
-  );
-
-  // Don't render anything until we have a definitive state
-  if (moviesLoading) {
-    return (
-      <View className="bg-primary flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#ab8bff" />
-        <Text className="text-white mt-4 text-lg">Loading movies...</Text>
-      </View>
-    );
+  if (loading) {
+    return <StateView type="loading" title="Loading movies" message="Fetching today’s popular titles." />;
   }
 
-  if (moviesError) {
-    return (
-      <View className="bg-primary flex-1 items-center justify-center px-4">
-        <Text className="text-red-400 text-center text-lg mb-4">
-          Something went wrong
-        </Text>
-        <Text className="text-gray-300 text-center mb-4">
-          {moviesError}
-        </Text>
-        <TouchableOpacity 
-          onPress={refetch}
-          className="bg-accent px-6 py-3 rounded-lg"
-        >
-          <Text className="text-white font-semibold">Try Again</Text>
-        </TouchableOpacity>
-      </View>
-    );
+  if (error) {
+    return <StateView type="error" title="Could not load movies" message={error} actionLabel="Try again" onAction={refetch} />;
   }
 
-  // Only render the main content if we have data
-  if (!movies) {
-    return (
-      <View className="bg-primary flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#ab8bff" />
-      </View>
-    );
-  }
+  const movies = data?.results ?? [];
 
   return (
-    <View className="bg-primary flex-1">
+    <View style={styles.container}>
       <FlatList
-        data={limitedMovies}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderMovieItem}
-        ListHeaderComponent={renderHeader}
+        data={movies}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <MovieCard movie={item} onPress={() => router.push(`/movie/${item.id}`)} />}
         numColumns={3}
-        columnWrapperStyle={{ 
-          justifyContent: 'center', 
-          paddingHorizontal: 4,
-          gap:6
-          
-        }}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         onRefresh={refetch}
-        refreshing={moviesLoading}
-        ItemSeparatorComponent={() => <View style={{ height: 2 }} />}
+        refreshing={loading}
+        ListHeaderComponent={
+          <View style={styles.headerWrap}>
+            <View style={styles.brandRow}>
+              <Image source={brandIcon} style={styles.brandIcon} />
+              <View>
+                <Text style={styles.brandName}>Cinemans</Text>
+                <Text style={styles.brandTag}>Dark cinema companion</Text>
+              </View>
+            </View>
+            <SearchBar placeholder="Search movies" onPress={() => router.push('/search')} />
+            <SectionHeader title="Popular now" subtitle="Handpicked from TMDB trending audience" />
+          </View>
+        }
+        ListEmptyComponent={<StateView type="empty" title="No movies found" message="Try refreshing in a moment." />}
       />
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.bg,
+  },
+  listContent: {
+    paddingHorizontal: theme.spacing.md,
+    paddingBottom: 100,
+  },
+  row: {
+    justifyContent: 'space-between',
+  },
+  headerWrap: {
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.md,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+  },
+  brandIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+  },
+  brandName: {
+    color: theme.colors.text,
+    fontSize: 24,
+    fontWeight: '800',
+  },
+  brandTag: {
+    color: theme.colors.textMuted,
+    fontSize: 12,
+    marginTop: 2,
+  },
+});
